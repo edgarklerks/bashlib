@@ -1,0 +1,36 @@
+set sdir [file dirname [file normalize $argv0 ] ]
+
+
+set auto_path [linsert $auto_path 0 $sdir]
+package require sftp 1.0
+package require coro 1.0
+
+set sftp_password [ argv_password ]
+set sftp_user [ argv_user ]
+set sftp_host [ argv_host ]
+set sftp_dirs [ argv_rest ]
+
+if { [ llength $sftp_dirs ] > 1 } {
+    puts stderr "Only accept one directory"
+    exit 1
+}
+
+if { [ llength $sftp_dirs ] == 0 } {
+    puts stderr "Defaulting to /"
+    set $sftp_dirs {}
+}
+
+if { $sftp_dirs eq "/" } {
+    set sftp_dirs {}
+}
+
+
+
+log_user 0
+sftp_login $sftp_user $sftp_host $sftp_password
+
+coroutine nextItem sftp_ls_l $sftp_dirs
+
+coro_puts nextItem
+
+sftp_logout
