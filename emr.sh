@@ -279,13 +279,6 @@ function emr_setup(){
     debug "emr setup done."
 }
 
-function emr_generic_setup(){
-   run_when is_file "/var/lib/jenkins/BigDataCloudKey.pem" emr_setup "BigData_Platform" "/var/lib/jenkins/BigDataCloudKey.pem" || ok "This succeeded"
-   run_when is_file "/var/lib/jenkins/.ssh/BigDataCloudKey.pem" emr_setup "BigData_Platform" "/var/lib/jenkins/.ssh/BigDataCloudKey.pem"
-   run_when is_file "$HOME/BigDataCloudKey.pem" emr_setup "BigData_Platform" "$HOME/BigDataCloudKey.pem"
-   run_when is_file "$HOME/.ssh/BigDataCloudKey.pem" emr_setup "BigData_Platform" "$HOME/.ssh/BigDataCloudKey.pem"
-   emr_check_keys
-}
 
 function emr_hive_raw(){
     emr_ssh hive "$@"
